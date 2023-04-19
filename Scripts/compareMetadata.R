@@ -1,26 +1,45 @@
 #compare output from imageFilesMetadata.R to the metadata file "Imaged Ste...
 
+require(dplyr)
+require(stringr)
+
 #### COMPARE TO METADATA FILE ----
 
 ##### LOAD DATA -----
-bryo.meta <- read.csv("./Data/Imaged Steginoporella magnifica specimens.csv", header = TRUE)
+bryo.meta <- read.csv("./previousMetadata/Imaged Steginoporella magnifica specimens.csv", header = TRUE)
 bryo.meta$SPECIMEN.NR <- gsub(bryo.meta$SPECIMEN.NR,
                               pattern = " ", 
                               replacement = "")
+
+df.list <- read.table("./newMetadata/Steginoporella_magnifica_image_metadata_17Apr2023.csv",
+                      header = TRUE,
+                      sep = ";")
+
 nrow(bryo.meta) #880
 nrow(bryo.meta[!duplicated(bryo.meta$SPECIMEN.NR),]) #777
 
+nrow(df.list) #1890
+nrow(df.list[!duplicated(df.list$specimenNR),]) #908
+
 ##### COMPARE TOTALS -----
 
-tots <- df.list %>%
-  group_by(specimenNR, ext) %>%
+tots.images <- df.list %>%
+  group_by(S) %>%
   summarise(N = n()) %>%
   as.data.frame()
 
-nrow(tots) #1810
-#1033 more images
+nrow(tots.images) #908
+tots.images$SPECIMEN.NR <- str_remove(tots.images$specimenNR, "^0+")
+tots.images$SPECIMEN.NR <- gsub("_", "", tots.images$SPECIMEN.NR)
 
-length(setdiff(tots$specimenNR, bryo.meta$SPECIMEN.NR)) #136 in df.list that are not in bryo.meta
+tots.meta <- bryo.meta %>%
+  group_by(SPECIMEN.NR) %>%
+  summarise(N = n()) %>%
+  as.data.frame()
+
+nrow(tots.meta) #777
+
+length(setdiff(tots.images$SPECIMEN.NR, tots.meta$SPECIMEN.NR)) #908 in df.list that are not in bryo.meta
 length(setdiff(bryo.meta$SPECIMEN.NR, tots$specimenNR)) #8 in bryo.meta that are not in df.list
 
 ## look at 8 in bryo.meta that are not in df.list
