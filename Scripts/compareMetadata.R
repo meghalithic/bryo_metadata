@@ -11,36 +11,38 @@ bryo.meta$SPECIMEN.NR <- gsub(bryo.meta$SPECIMEN.NR,
                               pattern = " ", 
                               replacement = "")
 
-df.list <- read.table("./newMetadata/Steginoporella_magnifica_image_metadata_17Apr2023.csv",
+df.list <- read.table("./reconciling/image_merge_txt_usingfileName_DONE_17Apr2023.csv",
                       header = TRUE,
                       sep = ";")
 
 nrow(bryo.meta) #880
-nrow(bryo.meta[!duplicated(bryo.meta$SPECIMEN.NR),]) #777
+nrow(bryo.meta[!duplicated(bryo.meta$SPECIMEN.NR),]) #778
 
 nrow(df.list) #1890
-nrow(df.list[!duplicated(df.list$specimenNR),]) #908
+nrow(df.list[!duplicated(df.list$specimenNR.tif),]) #905
 
 ##### COMPARE TOTALS -----
 
 tots.images <- df.list %>%
-  group_by(S) %>%
+  group_by(specimenNR.tif) %>%
   summarise(N = n()) %>%
   as.data.frame()
 
-nrow(tots.images) #908
-tots.images$SPECIMEN.NR <- str_remove(tots.images$specimenNR, "^0+")
-tots.images$SPECIMEN.NR <- gsub("_", "", tots.images$SPECIMEN.NR)
+nrow(tots.images) #905
+tots.images$SPECIMEN.NR.new <- str_remove(tots.images$specimenNR.tif, "^0+")
+tots.images$SPECIMEN.NR.new <- gsub("_", "", tots.images$SPECIMEN.NR.new)
 
 tots.meta <- bryo.meta %>%
   group_by(SPECIMEN.NR) %>%
   summarise(N = n()) %>%
   as.data.frame()
 
-nrow(tots.meta) #777
+nrow(tots.meta) #778
 
-length(setdiff(tots.images$SPECIMEN.NR, tots.meta$SPECIMEN.NR)) #908 in df.list that are not in bryo.meta
-length(setdiff(bryo.meta$SPECIMEN.NR, tots$specimenNR)) #8 in bryo.meta that are not in df.list
+length(setdiff(tots.images$SPECIMEN.NR.tif, tots.meta$SPECIMEN.NR)) #0 in df.list that are not in bryo.meta
+length(setdiff(tots.meta$SPECIMEN.NR.new, tots.images$SPECIMEN.NR)) #0 in bryo.meta that are not in df.list
+
+#### OLD ----
 
 ## look at 8 in bryo.meta that are not in df.list
 setdiff(bryo.meta$SPECIMEN.NR, tots$specimenNR) 
