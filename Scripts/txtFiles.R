@@ -137,5 +137,5 @@ for(i in 1:nrow(txt.df)){
 }
 
 #write.csv(txt.df,
-#          "./Data/txt_metadata.csv",
+#          "./Data/txt.metadata.csv",
 #          row.names = FALSE)

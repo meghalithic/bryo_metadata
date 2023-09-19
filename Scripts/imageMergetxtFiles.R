@@ -81,7 +81,7 @@ setdiff(txt.df$fileName, df.list.txt$fileName)
 # no difference in txt files
 
 #write.csv(df.image.meta,
-#          "./Data/image_merge_txt.csv",
+#          "./Data/image.merge.txt.csv",
 #          row.names = FALSE)
 
 ## RECONCILE MANUALLY ##
