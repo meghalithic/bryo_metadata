@@ -99,6 +99,8 @@ df.list <- data.frame(path = listPath,
 nrow(df.list) #3779
 nrow(df.list[df.list$ext == "tif",]) #1890, an extra image
 
+#THIS IS ERRORING BECAUSE OF HOW DID IT
+#COMPARE IT TO SUBFOLDER TOO
 df.list$formation <- ""
 df.list$formation[grepl("^0", df.list$specimenNR)] <- "NKBS"
 df.list$formation[grepl("^1", df.list$specimenNR)] <- "NKBS"
@@ -111,6 +113,25 @@ df.list$formation[grepl("^7", df.list$specimenNR)] <- "SHCSBSB"
 df.list$formation[grepl("^8", df.list$specimenNR)] <- "Tainui"
 df.list$formation[grepl("^10", df.list$specimenNR)] <- "Upper Kai-Iwi"
 df.list$formation[grepl("^11", df.list$specimenNR)] <- "Waipuru"
+
+#DO IT THIS WAY:
+    output.fossil2$form.no <- as.numeric(str_extract(output.fossil2$specimenNR,
+                                                     "[0-9]+"))
+output.fossil2$formation.manual <- ""
+
+output.fossil2$formation.manual[output.fossil2$form.no <= 399] <- "NKBS"
+output.fossil2$formation.manual[output.fossil2$form.no >= 400 & 
+                                    output.fossil2$form.no <= 599] <- "NKLS"
+output.fossil2$formation.manual[output.fossil2$form.no >= 600 & 
+                                    output.fossil2$form.no <= 699] <- "Tewkesbury"
+output.fossil2$formation.manual[output.fossil2$form.no >= 700 & 
+                                    output.fossil2$form.no <= 799] <- "SHCSBSB"
+output.fossil2$formation.manual[output.fossil2$form.no >= 800 & 
+                                    output.fossil2$form.no <= 899] <- "Tainui"
+output.fossil2$formation.manual[output.fossil2$form.no >= 1000 & 
+                                    output.fossil2$form.no <= 1099] <- "Upper Kai-Iwi"
+output.fossil2$formation.manual[output.fossil2$form.no >= 1100 & 
+                                    output.fossil2$form.no <= 1199] <- "Waipuru"#
 
 #write.csv(df.list,
 #          "./Data/imageList.csv",
