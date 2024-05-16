@@ -11,7 +11,7 @@ require(splitstackshape)
 require(data.table)
 
 #### GET PATH -----
-images.path <- "../../../../../../../media/voje-lab/00C67493C6748AA4/Stegs3 WABO IV/"
+images.path <- "../../../../../../../media/voje-lab/00C67493C6748AA4/Microporella/"
 
 #### 1. LIST OF FILE NAMES ----
 
@@ -72,8 +72,8 @@ for(i in 1:length(list.parse)){
 
 ##### PARSE IMAGE NAME -----
 
-image <- str_extract(fileName, pattern = "[^.]+")
-
+image <- str_extract(fileName, pattern = "[^.]$")
+#image.list <- str_split(fileName, pattern = "\\.") #for microporella
 image.list <- str_split(image,
                         pattern = "_")
 
@@ -96,6 +96,7 @@ df.list <- data.frame(path = listPath,
 
 nrow(df.list) 
 nrow(df.list[df.list$ext == "tif",]) #should be half
+#sort(table(df.list$specimenNR)) #for microporella
 
 duplicated(df.list$fileName) #should all be FALSE
 
