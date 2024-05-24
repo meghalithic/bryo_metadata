@@ -11,7 +11,7 @@ require(splitstackshape)
 require(data.table)
 
 #### GET PATH -----
-images.path <- "../../../../../../../media/voje-lab/00C67493C6748AA4/Microporella/"
+images.path <- "../../../../Desktop/BLEED/"
 
 #### 1. LIST OF FILE NAMES ----
 
@@ -73,14 +73,14 @@ for(i in 1:length(list.parse)){
 ##### PARSE IMAGE NAME -----
 
 image <- str_extract(fileName, pattern = "[^.]$")
-#image.list <- str_split(fileName, pattern = "\\.") #for microporella
+#image.list <- str_split(fileName, pattern = "\\.") #for BLEED
 image.list <- str_split(image,
                         pattern = "_")
 
 specimenNR <- c()
 
 for(i in 1:length(image.list)){
-  specimenNR[i] <- paste0(image.list[[i]][1], image.list[[i]][2])
+  specimenNR[i] <- paste0(image.list[[i]][1], image.list[[i]][2]) #image.list[[i]][4] #BLEED
 }
 
 ##### COMBINE & WRITE CSV ----
@@ -96,7 +96,6 @@ df.list <- data.frame(path = listPath,
 
 nrow(df.list) 
 nrow(df.list[df.list$ext == "tif",]) #should be half
-#sort(table(df.list$specimenNR)) #for microporella
 
 duplicated(df.list$fileName) #should all be FALSE
 
@@ -126,7 +125,6 @@ list.txt <- listPath[!grepl("*.tif",
 length(list.txt)
 
 txtPath <- unlist(list.txt)
-
 
 ##### READ TXT FILES -----
 
@@ -183,14 +181,21 @@ nrow(txt.df) #1889
 txt.df$fileName <- basename(txt.df$path)
 txt.df$image <- str_extract(txt.df$fileName, pattern = "[^.]+")
 
+#txt.df$image <- gsub(".txt", 
+#                     "",
+#                     txt.df$fileName)
 
 image.parse <- str_split(txt.df$image,
                          pattern = "_")
 
+#for BLEED
+#image.parse <- str_split(txt.df$image,
+#                       pattern = "\\.")
+
 txt.df$specimenNR <- ""
 
 for(i in 1:nrow(txt.df)){
-  txt.df$specimenNR[i] <- paste0(image.parse[[i]][1], image.parse[[i]][2])
+  txt.df$specimenNR[i] <- paste0(image.parse[[i]][1], image.parse[[i]][2]) #image.parse[[i]][4]
 }
 
 #### 3. COMBINE IMAGE AND TEXT FILES ----
@@ -211,7 +216,6 @@ colnames(df.image.meta)[colnames(df.image.meta) == 'fileName.x'] <- 'fileName.ti
 colnames(df.image.meta)[colnames(df.image.meta) == 'fileName.y'] <- 'fileName.txt'
 colnames(df.image.meta)[colnames(df.image.meta) == 'path.x'] <- 'path.tif'
 colnames(df.image.meta)[colnames(df.image.meta) == 'path.y'] <- 'path.txt'
-
 
 #### 4. CHECK METADATA AND FILE INFO ----
 ## make check in ImageName matches fileName
